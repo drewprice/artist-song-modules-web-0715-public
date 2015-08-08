@@ -1,34 +1,20 @@
 class Song
   attr_accessor :name
   attr_reader :artist
-  @@songs = []
+
+  extend Memorable::ClassMethods
 
   def initialize
-    @@songs << self
+    Song.all << self
   end
 
-  def self.find_by_name(name)
-    @@songs.detect{|a| a.name}
-  end
 
   def artist=(artist)
     @artist = artist
-    artist.add_song(self)
-  end
-
-  def self.reset_all
-    @@songs.clear
+    artist.add_song(self) unless artist.songs.include? self
   end
 
   def to_param
-    name.downcase.gsub(' ', '-')
-  end
-
-  def self.count
-    self.all.count
-  end
-
-  def self.all
-    @@songs
+    name.downcase.tr(' ', '-')
   end
 end
